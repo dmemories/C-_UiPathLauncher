@@ -1,7 +1,14 @@
-C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.exe.config
-C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.exe
-C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.pdb
-C:\Users\piyab505\source\repos\UiPath Launcher\obj\Debug\UiPath Launcher.csprojAssemblyReference.cache
 C:\Users\piyab505\source\repos\UiPath Launcher\obj\Debug\UiPath Launcher.csproj.CoreCompileInputs.cache
 C:\Users\piyab505\source\repos\UiPath Launcher\obj\Debug\UiPath Launcher.exe
 C:\Users\piyab505\source\repos\UiPath Launcher\obj\Debug\UiPath Launcher.pdb
+C:\Users\piyab505\source\repos\UiPath Launcher\obj\Debug\UiPath Launcher.csproj.CopyComplete
+C:\Users\piyab505\source\repos\UiPath Launcher\UiPath Launcher.exe.config
+C:\Users\piyab505\source\repos\UiPath Launcher\UiPath Launcher.exe
+C:\Users\piyab505\source\repos\UiPath Launcher\UiPath Launcher.pdb
+C:\Users\piyab505\source\repos\UiPath Launcher\Newtonsoft.Json.dll
+C:\Users\piyab505\source\repos\UiPath Launcher\Newtonsoft.Json.xml
+C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.exe.config
+C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.exe
+C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\UiPath Launcher.pdb
+C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\Newtonsoft.Json.dll
+C:\Users\piyab505\source\repos\UiPath Launcher\bin\Debug\Newtonsoft.Json.xml

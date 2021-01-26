@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UiPath_Launcher
 {
     class Program
     {
-  
+
         static String getRobotPath()
         {
             String robotPath = "";
@@ -38,9 +36,29 @@ namespace UiPath_Launcher
         static void Main(string[] args)
         {
             String robotPath = getRobotPath();
-            String executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\Main.xaml\"";
-            Console.WriteLine("Robot Path : " + robotPath);
-            Console.WriteLine("Execute Path : " + executePath);
+            String configFilePath = Environment.CurrentDirectory + "\\UiPath Launcher.json";
+            String executePath;
+            Boolean debugMsg;
+
+            if (File.Exists(configFilePath))
+            {
+                String jsonTxt = System.IO.File.ReadAllText(configFilePath);
+                var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { RunName = "", WantDebugMsg = "" });
+                executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\" + jsonObj.RunName + "\"";
+                debugMsg = ((jsonObj.WantDebugMsg == "1") ? true : false);
+            }
+            else
+            {
+                executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\Main.xaml\"";
+                debugMsg = false;
+            }
+
+            if (debugMsg)
+            {
+                Console.WriteLine("Robot Path : " + robotPath);
+                Console.WriteLine("Execute Path : " + executePath);
+            }
+           
 
              System.Diagnostics.Process process = new System.Diagnostics.Process();
              System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -51,13 +69,14 @@ namespace UiPath_Launcher
              startInfo.CreateNoWindow = true;
              startInfo.UseShellExecute = false;
              process.StartInfo = startInfo;
-             process.Start();
+             process.Start(); 
              process.StandardInput.WriteLine(executePath);
              process.StandardInput.Flush();
              process.StandardInput.Close();
              process.WaitForExit();
 
-            Console.ReadLine();
+            if (debugMsg)
+                Console.ReadLine();
         }
     }
 }
