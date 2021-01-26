@@ -35,32 +35,49 @@ namespace UiPath_Launcher
 
         static void Main(string[] args)
         {
+            
             String robotPath = getRobotPath();
             String configFilePath = Environment.CurrentDirectory + "\\UiPath Launcher.json";
             String executePath;
-            Boolean debugMsg;
+            Boolean confirmRun;
+            Boolean pauseWhenFinished;
 
             if (File.Exists(configFilePath))
             {
                 String jsonTxt = System.IO.File.ReadAllText(configFilePath);
-                var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { RunName = "", WantDebugMsg = "" });
+                var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { RunName = "", WantPauseWhenFinished = "", WantConfirmRun = "" });
                 executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\" + jsonObj.RunName + "\"";
-                debugMsg = ((jsonObj.WantDebugMsg == "1") ? true : false);
+                confirmRun = ((jsonObj.WantConfirmRun == "1") ? true : false);
+                pauseWhenFinished = ((jsonObj.WantPauseWhenFinished == "1") ? true : false);
             }
             else
             {
                 executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\Main.xaml\"";
-                debugMsg = false;
+                confirmRun = true;
+                pauseWhenFinished = false;
             }
 
-            if (debugMsg)
+            if (confirmRun)
             {
-                Console.WriteLine("Robot Path : " + robotPath);
-                Console.WriteLine("Execute Path : " + executePath);
+                /* Console.WriteLine("[Robot Path]");
+                 Console.WriteLine(robotPath);
+                 Console.WriteLine("");*/
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ Execute Path ]");
+                Console.ResetColor();
+                Console.WriteLine(executePath);
+                Console.WriteLine("");
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Press any key to run !");
+                Console.ResetColor();
+                Console.ReadLine();
             }
-           
-
-             System.Diagnostics.Process process = new System.Diagnostics.Process();
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Running...");
+            Console.ResetColor();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
              System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
              startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
              startInfo.FileName = "cmd.exe";
@@ -75,8 +92,14 @@ namespace UiPath_Launcher
              process.StandardInput.Close();
              process.WaitForExit();
 
-            if (debugMsg)
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Finished !");
+            Console.ResetColor();
+            if (pauseWhenFinished) {
                 Console.ReadLine();
+            }
+
         }
     }
 }
