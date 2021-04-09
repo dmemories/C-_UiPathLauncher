@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace UiPath_Launcher
 {
@@ -11,21 +11,25 @@ namespace UiPath_Launcher
         static String getRobotPath()
         {
             String robotPath = "";
-            int maxVer = 20;
-            for (int i = 40; i >= 19; i--)
+            String mainPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\UiPath\\";
+            int mainverMax = 40, subverMax = 20, demoverMax = 10;
+
+            foreach (var dirName in System.IO.Directory.GetDirectories(mainPath, "app*"))
             {
-                Task.Delay(1000);
-                for (int j = maxVer; j >= 0; j--)
+                for (int mainver = mainverMax; mainver > 19; mainver--)
                 {
-                    for (int k = maxVer; k >= 0; k--)
+                    Task.Delay(1000);
+                    for (int subver = subverMax; subver >= 0; subver--)
                     {
-                        robotPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\UiPath\\app-" + i.ToString() + "." + j.ToString() + "." + k.ToString();
-                        if (Directory.Exists(robotPath))
+                        for (int demover = demoverMax; demover >= 0; demover--)
                         {
-                            robotPath = "\"" + robotPath + "\\UiRobot.exe\"";
-                            i = -1;
-                            j = -1;
-                            k = -1;
+                            if (dirName.ToString().IndexOf(mainver.ToString() + "." + subver.ToString() + "." + demover.ToString()) >= 0)
+                            {
+                                robotPath = "\"" + dirName.ToString() + "\\UiRobot.exe\"";
+                                mainver = -1;
+                                subver = -1;
+                                demover = -1;
+                            }
                         }
                     }
                 }
@@ -46,7 +50,7 @@ namespace UiPath_Launcher
             {
                 String jsonTxt = System.IO.File.ReadAllText(configFilePath);
                 var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { RunName = "", WantPauseWhenFinished = "", WantConfirmRun = "" });
-                executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\" + jsonObj.RunName + "\"";
+                executePath = robotPath + " -file \"" + Environment.CurrentDirectory + "\\" + jsonObj.RunName + "\"";
                 confirmRun = ((jsonObj.WantConfirmRun == "1") ? true : false);
                 pauseWhenFinished = ((jsonObj.WantPauseWhenFinished == "1") ? true : false);
             }
@@ -62,6 +66,11 @@ namespace UiPath_Launcher
                 /* Console.WriteLine("[Robot Path]");
                  Console.WriteLine(robotPath);
                  Console.WriteLine("");*/
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ Launcher Version ]");
+                Console.ResetColor();
+                Console.WriteLine("2.0");
+                Console.WriteLine("");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ Execute Path ]");
                 Console.ResetColor();
