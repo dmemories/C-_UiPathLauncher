@@ -39,8 +39,8 @@ namespace UiPath_Launcher
 
         static void Main(string[] args)
         {
-            
-            String robotPath = getRobotPath();
+
+            String robotPath;
             String configFilePath = Environment.CurrentDirectory + "\\UiPath Launcher.json";
             String executePath;
             Boolean confirmRun;
@@ -49,13 +49,15 @@ namespace UiPath_Launcher
             if (File.Exists(configFilePath))
             {
                 String jsonTxt = System.IO.File.ReadAllText(configFilePath);
-                var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { RunName = "", WantPauseWhenFinished = "", WantConfirmRun = "" });
+                var jsonObj = JsonConvert.DeserializeAnonymousType(jsonTxt, new { TargetDir = "", RunName = "", WantPauseWhenFinished = "", WantConfirmRun = "" });
+                robotPath = (String.IsNullOrEmpty(jsonObj.TargetDir) ? getRobotPath() : jsonObj.TargetDir);
                 executePath = robotPath + " -file \"" + Environment.CurrentDirectory + "\\" + jsonObj.RunName + "\"";
                 confirmRun = ((jsonObj.WantConfirmRun == "1") ? true : false);
                 pauseWhenFinished = ((jsonObj.WantPauseWhenFinished == "1") ? true : false);
             }
             else
             {
+                robotPath = getRobotPath();
                 executePath = robotPath + " execute --file \"" + Environment.CurrentDirectory + "\\Main.xaml\"";
                 confirmRun = true;
                 pauseWhenFinished = false;
@@ -70,6 +72,11 @@ namespace UiPath_Launcher
                 Console.WriteLine("[ Launcher Version ]");
                 Console.ResetColor();
                 Console.WriteLine("2.0");
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ Json Config ]");
+                Console.ResetColor();
+                Console.WriteLine("TargetDir, RunName, WantConfirmRun, WantPauseWhenFinished");
                 Console.WriteLine("");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ Execute Path ]");
@@ -87,19 +94,19 @@ namespace UiPath_Launcher
             Console.WriteLine("Running...");
             Console.ResetColor();
             System.Diagnostics.Process process = new System.Diagnostics.Process();
-             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-             startInfo.FileName = "cmd.exe";
-             startInfo.RedirectStandardInput = true;
-             startInfo.RedirectStandardOutput = true;
-             startInfo.CreateNoWindow = true;
-             startInfo.UseShellExecute = false;
-             process.StartInfo = startInfo;
-             process.Start(); 
-             process.StandardInput.WriteLine(executePath);
-             process.StandardInput.Flush();
-             process.StandardInput.Close();
-             process.WaitForExit();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "cmd.exe";
+            startInfo.RedirectStandardInput = true;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
+            process.StartInfo = startInfo;
+            process.Start(); 
+            process.StandardInput.WriteLine(executePath);
+            process.StandardInput.Flush();
+            process.StandardInput.Close();
+            process.WaitForExit();
 
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.Red;
